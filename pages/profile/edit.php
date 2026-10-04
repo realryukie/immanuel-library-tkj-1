@@ -3,7 +3,7 @@ require_once __DIR__ . "/../../repositories/user-repository.php";
 $user = getUser();
 $profile = getProfile();
 $pageTitle = "Profil Saya";
-$pageSubtitle = "Kelola data akun dan profil anda";
+$pageSubtitle = "Kelola data akun dan profil Anda";
 ?>
 
 <!DOCTYPE html>
