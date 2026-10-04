@@ -72,7 +72,7 @@ $pageSubtitle = "Perbarui data buku, kategori, dan penulis";
               <div class="checkbox-grid">
                 <?php foreach ($authors as $authorName): ?>
                   <label class="checkbox-item">
-                    <input type="checkbox" name="author_ids[]" value="<?= $authorName["id"] ?>" <?= in_array($authorName["id"], $book['authors']) ? 'checked' : '' ?>>
+                    <input type="checkbox" name="author_ids[]" value="<?= $authorName["id"] ?>" <?= in_array($authorName["name"], $book['authors']) ? 'checked' : '' ?>>
                     <?= $authorName["name"] ?>
                   </label>
                 <?php endforeach; ?>
