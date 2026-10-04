@@ -19,7 +19,7 @@ $pageSubtitle = "Kelola data akun dan profil anda";
     <?php require_once __DIR__ . "/../../components/admin/sidebar.php" ?>
 
     <main class="app-main">
-    < <?php require_once __DIR__ . "/../../components/admin/topbar.php" ?>
+    <?php require_once __DIR__ . "/../../components/admin/topbar.php" ?>
 
       <div class="app-content">
         <form method="post" action="../../actions/profile/update.php">
