@@ -1,6 +1,8 @@
 <?php
-require_once __DIR__ . '/../../repositories/book-repository.php';
+require_once __DIR__ . "/../../repositories/book-repository.php";
+
 $book = getBook();
+
 $pageTitle = "Detail Buku";
 $pageSubtitle = "Informasi lengkap buku beserta kategori dan penulis";
 ?>
@@ -18,7 +20,7 @@ $pageSubtitle = "Informasi lengkap buku beserta kategori dan penulis";
   <?php require_once __DIR__ . "/../../components/admin/sidebar.php" ?>
 
     <main class="app-main">
-      <?php require_once __DIR__ . "/../../components/admin/topbar.php" ?>
+    <?php require_once __DIR__ . "/../../components/admin/topbar.php" ?>
 
       <div class="app-content">
         <div class="detail-grid">

@@ -1,6 +1,8 @@
-<?php 
-require_once __DIR__ . "/../../repositories/author-repository.php"; 
+<?php
+require_once __DIR__ . "/../../repositories/author-repository.php";
+
 $authors = getAuthors();
+
 $pageTitle = "Manajemen Penulis";
 $pageSubtitle = "Kelola data penulis yang terdaftar di sistem";
 ?>
@@ -18,11 +20,11 @@ $pageSubtitle = "Kelola data penulis yang terdaftar di sistem";
   <?php require_once __DIR__ . "/../../components/admin/sidebar.php" ?>
 
     <main class="app-main">
-      <?php require_once __DIR__ . "/../../components/admin/topbar.php" ?>
+    <?php require_once __DIR__ . "/../../components/admin/topbar.php" ?>
 
       <div class="app-content">
         <div class="toolbar">
-          <form method="get" action="index.php" class="toolbar-filters">
+          <form method="" action="" class="toolbar-filters">
             <div class="search-box">
               <svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
               <input type="text" name="search" class="search-input" placeholder="Cari nama penulis...">
@@ -42,27 +44,24 @@ $pageSubtitle = "Kelola data penulis yang terdaftar di sistem";
               </tr>
             </thead>
             <tbody>
-              <?php foreach($authors as $index => $author): ?>
+              <?php foreach ($authors as $author): ?>
                 <tr>
-                <td>
-                  <div class="cell-primary">
-                    <span class="cell-thumb"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
-                    <?= $author['name'] ?>
-                  </div>
-                </td>
-                <td><span class="badge badge-muted"><?= $author['total_books'] ?> buku</span></td>
-                <td>
-                  <div class="cell-actions">
-                    <a href="edit.php?id=<?= $author['id'] ?>" class="btn btn-outline btn-sm">Edit</a>
-                    <a href="../../actions/authors/destroy.php?id=<?= $author['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus penulis ini?');">Hapus</a>
-                  </div>
-                </td>
-              </tr>
+                  <td>
+                    <div class="cell-primary">
+                      <span class="cell-thumb"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
+                      <?= $author['name'] ?>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-muted"><?= $author['total_books'] ?> buku</span></td>
+                  <td>
+                    <div class="cell-actions">
+                      <a href="edit.php?id=<?= $author['id'] ?>" class="btn btn-outline btn-sm">Edit</a>
+                      <a href="../../actions/authors/destroy.php?id=<?= $author['id'] ?>" class="btn btn-danger btn-sm"
+                        onclick="return confirm('Yakin ingin menghapus penulis ini?')">Hapus</a>
+                    </div>
+                  </td>
+                </tr>
               <?php endforeach ?>
-
-              <?php if(count($authors) < 1): ?>
-                <td style="text-align: center;" colspan="3">Tidak ada data penulis yang ditemukan</td>
-              <?php endif ?>
             </tbody>
           </table>
         </div>
