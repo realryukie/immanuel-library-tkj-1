@@ -1,7 +1,13 @@
 <?php
 require_once __DIR__ . "/../../repositories/category-repository.php";
 
-$category = getCategory();
+$id = isset($_GET['id']) ? (int) $_GET['id'] : null;
+$category = getCategory($id);
+
+if (!$category) {
+  header("Location: index.php");
+  exit;
+}
 
 $pageTitle = "Edit Kategori";
 $pageSubtitle = "Perbarui data kategori";

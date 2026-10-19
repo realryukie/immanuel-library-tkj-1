@@ -1,7 +1,13 @@
 <?php
 require_once __DIR__ . "/../../repositories/book-repository.php";
 
-$book = getBook();
+$id = isset($_GET['id']) ? (int) $_GET['id'] : null;
+$book = getBook($id);
+
+if (!$book) {
+  header("Location: index.php");
+  exit;
+}
 
 $pageTitle = "Detail Buku";
 $pageSubtitle = "Informasi lengkap buku beserta kategori dan penulis";

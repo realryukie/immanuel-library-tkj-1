@@ -5,7 +5,11 @@ function getCategories()
 {
   global $pdo;
 
-  $query = "select * from categories";
+  $query = "select c.id, c.name, c.description, count(b.id) as total_books
+            from categories c
+            left join books b on b.category_id = c.id
+            group by c.id, c.name, c.description
+            order by c.name";
   $stmt = $pdo->prepare($query);
   $stmt->execute();
 
@@ -14,13 +18,16 @@ function getCategories()
   return $categories;
 }
 
-function getCategory()
+function getCategory($id = null)
 {
-  $category = [
-    "id"          => 1,
-    "name"        => "Fiksi",
-    "description" => "Novel dan cerita rekaan",
-  ];
+  if ($id === null || $id === '') {
+    return null;
+  }
 
-  return $category;
+  global $pdo;
+
+  $stmt = $pdo->prepare("SELECT id, name, description FROM categories WHERE id = :id");
+  $stmt->execute([':id' => $id]);
+
+  return $stmt->fetch() ?: null;
 }

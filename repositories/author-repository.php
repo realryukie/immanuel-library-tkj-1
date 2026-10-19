@@ -5,7 +5,11 @@ function getAuthors()
 {
   global $pdo;
 
-  $query = "select id, name from authors";
+  $query = "select a.id, a.name, count(distinct ba.book_id) as total_books
+            from authors a
+            left join book_author ba on ba.author_id = a.id
+            group by a.id, a.name
+            order by a.name";
   $stmt = $pdo->prepare($query);
   $stmt->execute();
 
@@ -14,13 +18,16 @@ function getAuthors()
   return $authors;
 }
 
-function getAuthor()
+function getAuthor($id = null)
 {
-  $author = [
-    "id"   => 1,
-    "name" => "Andrea Hirata",
-    "bio"  => "Penulis asal Belitung, dikenal lewat novel Laskar Pelangi.",
-  ];
+  if ($id === null || $id === '') {
+    return null;
+  }
 
-  return $author;
+  global $pdo;
+
+  $stmt = $pdo->prepare("SELECT id, name, bio FROM authors WHERE id = :id");
+  $stmt->execute([':id' => $id]);
+
+  return $stmt->fetch() ?: null;
 }

@@ -1,7 +1,13 @@
 <?php
 require_once __DIR__ . "/../../repositories/user-repository.php";
 
-$user = getUser();
+$id = isset($_GET['id']) ? (int) $_GET['id'] : null;
+$user = getUser($id);
+
+if (!$user) {
+  header("Location: index.php");
+  exit;
+}
 
 $pageTitle = "Edit Pengguna";
 $pageSubtitle = "Perbarui data dan role pengguna";

@@ -1,18 +1,19 @@
 <?php
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../../config/database.php';
+
 if (isset($_POST['store']) && $_SERVER['REQUEST_METHOD'] === "POST") {
     try {
         $pdo->beginTransaction();
 
-        $title = htmlspecialchars($_POST['title']);
-        $isbn = htmlspecialchars($_POST['isbn']);
-        $year = htmlspecialchars($_POST['year']);
-        $stock = htmlspecialchars($_POST['stock']);
-        $description = htmlspecialchars($_POST['description']);
-        $category_id = htmlspecialchars($_POST['category_id']);
+        $title = trim($_POST['title'] ?? '');
+        $isbn = trim($_POST['isbn'] ?? '');
+        $year = (int) ($_POST['year'] ?? 0);
+        $stock = (int) ($_POST['stock'] ?? 0);
+        $description = trim($_POST['description'] ?? '');
+        $categoryId = (int) ($_POST['category_id'] ?? 0);
 
-        $query = "insert into books (title, isbn, year, stock, description, category_id) 
-                VALUES (:title, :isbn, :year, :stock, :description, :category_id)";
+        $query = "INSERT INTO books (title, isbn, year, stock, description, category_id)
+                  VALUES (:title, :isbn, :year, :stock, :description, :category_id)";
 
         $stmt = $pdo->prepare($query);
         $stmt->execute([
@@ -21,30 +22,31 @@ if (isset($_POST['store']) && $_SERVER['REQUEST_METHOD'] === "POST") {
             ':year' => $year,
             ':stock' => $stock,
             ':description' => $description,
-            ':category_id' => $category_id
+            ':category_id' => $categoryId
         ]);
 
-        $bookId = $pdo->lastInsertId();
+        $bookId = (int) $pdo->lastInsertId();
 
-        $query = "insert into book_author (book_id, author_id) VALUES (:book_id, :author_id)";
-        $sstmt = $pdo->prepare($query);
+        $authorIds = $_POST['author_ids'] ?? [];
+        if (!empty($authorIds) && is_array($authorIds)) {
+            $query = "INSERT INTO book_author (book_id, author_id) VALUES (:book_id, :author_id)";
+            $sstmt = $pdo->prepare($query);
 
-        $authorIds = $_POST['author_ids'];
-        foreach ($authorIds as $authorId) {
-            $sstmt->execute([
-                ':book_id' => $bookId,
-                ':author_id' => htmlspecialchars($authorId)
-            ]);
+            foreach ($authorIds as $authorId) {
+                $sstmt->execute([
+                    ':book_id' => $bookId,
+                    ':author_id' => (int) $authorId
+                ]);
+            }
         }
 
         $pdo->commit();
         header("Location: ../../pages/books/index.php");
         exit;
-
     } catch (PDOException $e) {
-        $pdo->rollBack();
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
         throw $e;
-    }   
+    }
 }
-
-?>

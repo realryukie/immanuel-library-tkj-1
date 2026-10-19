@@ -3,8 +3,14 @@ require_once __DIR__ . "/../../repositories/book-repository.php";
 require_once __DIR__ . "/../../repositories/category-repository.php";
 require_once __DIR__ . "/../../repositories/author-repository.php";
 
-$id = $_GET['id'];
+$id = isset($_GET['id']) ? (int) $_GET['id'] : null;
 $book = getBook($id);
+
+if (!$book) {
+  header("Location: index.php");
+  exit;
+}
+
 $categories = getCategories();
 $authors = getAuthors();
 
@@ -55,7 +61,7 @@ $pageSubtitle = "Perbarui data buku, kategori, dan penulis";
                 <label for="category_id">Kategori</label>
                 <select id="category_id" name="category_id">
                   <?php foreach ($categories as $category): ?>
-                    <option value="<?= $category['id'] ?>" <?= $category['id'] === $book['category_id'] ? 'selected' : '' ?>><?= $category['name'] ?></option>
+                    <option value="<?= $category['id'] ?>" <?= (int) $category['id'] === (int) $book['category_id'] ? 'selected' : '' ?>><?= $category['name'] ?></option>
                   <?php endforeach; ?>
                 </select>
               </div>

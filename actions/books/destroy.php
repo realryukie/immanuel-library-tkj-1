@@ -1,36 +1,26 @@
 <?php
-require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../config/database.php';
 
 if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === "GET") {
-    try{
+    try {
         $pdo->beginTransaction();
-        $id = $_GET['id'];    
+        $id = (int) $_GET['id'];
 
-        $id = $_GET['id'];
-        //Delete relation data (book author)
-        $query = "delete from book_author where book_id = :book_id";
+        $query = "DELETE FROM book_author WHERE book_id = :book_id";
         $stmt = $pdo->prepare($query);
-        $stmt->execute([
-            'book_id' => $id
-        ]);
+        $stmt->execute([':book_id' => $id]);
 
-        $id = $_GET['id'];
-        //Delete relation data (book author)
-        $query = "delete from books where id = :id";
+        $query = "DELETE FROM books WHERE id = :id";
         $stmt = $pdo->prepare($query);
-        $stmt->execute([
-            'id' => $id
-        ]);
+        $stmt->execute([':id' => $id]);
 
         $pdo->commit();
         header("Location: ../../pages/books/index.php");
         exit;
-
-      //Delete book data
     } catch (PDOException $e) {
-        $pdo->rollBack();
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
         throw $e;
     }
 }
-
-?>

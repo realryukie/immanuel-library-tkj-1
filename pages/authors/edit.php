@@ -1,7 +1,13 @@
 <?php
 require_once __DIR__ . "/../../repositories/author-repository.php";
 
-$author = getAuthor();
+$id = isset($_GET['id']) ? (int) $_GET['id'] : null;
+$author = getAuthor($id);
+
+if (!$author) {
+  header("Location: index.php");
+  exit;
+}
 
 $pageTitle = "Edit Penulis";
 $pageSubtitle = "Perbarui data penulis";

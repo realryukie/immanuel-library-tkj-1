@@ -1,27 +1,28 @@
 <?php
+require_once __DIR__ . '/../config/database.php';
 
 function getUsers()
 {
-  $users = [
-    ["id" => 1, "name" => "Admin Utama",    "email" => "admin@ski.sch.id",               "role" => "admin"],
-    ["id" => 2, "name" => "Budi Santoso",   "email" => "budi.santoso@siswa.ski.sch.id",  "role" => "member"],
-    ["id" => 3, "name" => "Siti Aminah",    "email" => "siti.aminah@siswa.ski.sch.id",   "role" => "member"],
-    ["id" => 4, "name" => "Richard Marcell","email" => "richard.m@ski.sch.id",           "role" => "admin"],
-  ];
+  global $pdo;
 
-  return $users;
+  $stmt = $pdo->query("SELECT id, name, email, role FROM users ORDER BY name");
+
+  return $stmt->fetchAll();
 }
 
-function getUser()
+function getUser($id = null)
 {
-  $user = [
-    "id"    => 2,
-    "name"  => "Budi Santoso",
-    "email" => "budi.santoso@siswa.ski.sch.id",
-    "role"  => "member",
-  ];
+  global $pdo;
 
-  return $user;
+  if ($id === null || $id === '') {
+    $stmt = $pdo->query("SELECT id, name, email, role FROM users ORDER BY id LIMIT 1");
+    return $stmt->fetch() ?: null;
+  }
+
+  $stmt = $pdo->prepare("SELECT id, name, email, role FROM users WHERE id = :id");
+  $stmt->execute([':id' => $id]);
+
+  return $stmt->fetch() ?: null;
 }
 
 function getProfile()
