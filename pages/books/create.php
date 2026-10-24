@@ -1,9 +1,18 @@
 <?php
+session_start();
 require_once __DIR__ . "/../../repositories/category-repository.php";
 require_once __DIR__ . "/../../repositories/author-repository.php";
 
+$id = $_GET['id'];
+$book = getBook($id);
 $categories = getCategories();
 $authors = getAuthors();
+
+$errors = $_SESSION['errors'] ?? [];
+$old = $SESSION['old']?? [];
+unset($_SESSION['errors'], $_SESSION['old']);
+
+$book = array_merge($book, $old);
 
 $pageTitle = "Tambah Buku";
 $pageSubtitle = "Lengkapi data buku, kategori, dan penulis";
@@ -32,36 +41,62 @@ $pageSubtitle = "Lengkapi data buku, kategori, dan penulis";
             <div class="form-section-title">Data Buku</div>
             <div class="form-group">
               <label for="title">Judul Buku</label>
-              <input type="text" id="title" name="title" placeholder="Contoh: Laskar Pelangi">
+              <input value="<?= $old['title'] ?? '' ?>" type="text" id="title" name="title" placeholder="Contoh: Laskar Pelangi">
+              <?php if (isset($errors['title'])): ?>
+                <p style = "font-size:12px; margin-top:4px; color:red;">
+                  <?= $errors['title'] ?>
+                </p>
+              <?php endif; ?>
             </div>
             <div class="form-row">
               <div class="form-group">
                 <label for="isbn">ISBN</label>
-                <input type="text" id="isbn" name="isbn" placeholder="Contoh: 978-979-1227-78-0">
+                <input value="<?= $old['isbn'] ?? '' ?>" type="text" id="isbn" name="isbn" placeholder="Contoh: 978-979-1227-78-0">
+                <?php if (isset($errors['isbn'])): ?>
+                  <p style = "font-size:12px; margin-top:4px; color:red;">
+                    <?= $errors['isbn'] ?>
+                  </p>
+                <?php endif; ?>
               </div>
               <div class="form-group">
                 <label for="year">Tahun Terbit</label>
-                <input type="number" id="year" name="year" placeholder="Contoh: 2005">
+                <input value="<?= $old['year'] ?? '' ?>" type="number" id="year" name="year" placeholder="Contoh: 2005">
+                <?php if (isset($errors['year'])): ?>
+                  <p style = "font-size:12px; margin-top:4px; color:red;">
+                    <?= $errors['year'] ?>
+                  </p>
+                <?php endif; ?>
               </div>
             </div>
             <div class="form-row">
               <div class="form-group">
                 <label for="stock">Jumlah Stok</label>
-                <input type="number" id="stock" name="stock" placeholder="Contoh: 10">
+                <input value="<?= $old['stock'] ?? '' ?>" type="number" id="stock" name="stock" placeholder="Contoh: 10">
+                <?php if (isset($errors['stock'])): ?>
+                  <p style = "font-size:12px; margin-top:4px; color:red;">
+                    <?= $errors['stock'] ?>
+                  </p>
+                <?php endif; ?>
               </div>
               <div class="form-group">
                 <label for="category_id">Kategori</label>
                 <select id="category_id" name="category_id">
                   <?php foreach ($categories as $category): ?>
-                    <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
+                    <option <?= $old['category_id'] ?? '' === $category['id'] ? 'selected' : '' ?> value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
                   <?php endforeach; ?>
                 </select>
               </div>
             </div>
             <div class="form-group">
               <label for="description">Deskripsi</label>
-              <textarea id="description" name="description" rows="3" placeholder="Sinopsis singkat buku"></textarea>
+              <textarea id="description" name="description" rows="3" placeholder="Sinopsis singkat buku"><?= $old['description'] ?? '' ?></textarea>
             </div>
+            <input value="<?= $old['title'] ?? '' ?>" type="hidden" name="description" id="description">
+            <?php if (isset($errors['description'])): ?>
+              <p style = "font-size:12px; margin-top:4px; color:red;">
+                <?= $errors['description'] ?>
+              </p>
+            <?php endif; ?>
           </div>
 
           <div class="form-card">
@@ -71,7 +106,7 @@ $pageSubtitle = "Lengkapi data buku, kategori, dan penulis";
               <div class="checkbox-grid">
                 <?php foreach ($authors as $author): ?>
                   <label class="checkbox-item">
-                    <input type="checkbox" name="author_ids[]" value="<?= $author['id'] ?>">
+                    <input <?= in_array($author['id'], $old['author_ids'] ?? []) ? 'checked' : '' ?> type="checkbox" name="author_ids[]" value="<?= $author['id'] ?>">
                     <?= $author['name'] ?>
                   </label>
                 <?php endforeach; ?>

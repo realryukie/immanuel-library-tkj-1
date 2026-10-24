@@ -1,9 +1,22 @@
 <?php
+session_start();
 require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../validations/book-validation.php';
 
 if (isset($_POST['store']) && $_SERVER['REQUEST_METHOD'] === "POST") {
     try {
         $pdo->beginTransaction();
+
+        $request = getBookRequest($_POST);
+        $errors = validateBook($request);
+
+        if (count($errors) > 0) {   
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old'] = $request;
+
+            header("Location: ../../pages/books/create.php");
+            exit;
+        }
 
         $title = trim($_POST['title'] ?? '');
         $isbn = trim($_POST['isbn'] ?? '');
@@ -17,27 +30,27 @@ if (isset($_POST['store']) && $_SERVER['REQUEST_METHOD'] === "POST") {
 
         $stmt = $pdo->prepare($query);
         $stmt->execute([
-            ':title' => $title,
-            ':isbn' => $isbn,
-            ':year' => $year,
-            ':stock' => $stock,
-            ':description' => $description,
-            ':category_id' => $categoryId
+            ':title' => $request['title'],
+            ':isbn' => $request['isbn'],
+            ':year' => $request['year'],
+            ':stock' => $request['stock'],
+            ':description' => $request['description'],
+            ':category_id' => $request['category_id']
         ]);
 
         $bookId = (int) $pdo->lastInsertId();
 
         $authorIds = $_POST['author_ids'] ?? [];
-        if (!empty($authorIds) && is_array($authorIds)) {
-            $query = "INSERT INTO book_author (book_id, author_id) VALUES (:book_id, :author_id)";
-            $sstmt = $pdo->prepare($query);
+        
+        $query = "INSERT INTO book_author (book_id, author_id) VALUES (:book_id, :author_id)";
+        $sstmt = $pdo->prepare($query);
 
-            foreach ($authorIds as $authorId) {
-                $sstmt->execute([
-                    ':book_id' => $bookId,
-                    ':author_id' => (int) $authorId
-                ]);
-            }
+        $authorIds = $request['author_ids'];
+        foreach ($authorIds as $authorId) {
+            $sstmt->execute([
+                ':book_id' => $bookId,
+                ':author_id' => (int) $authorId
+            ]);
         }
 
         $pdo->commit();

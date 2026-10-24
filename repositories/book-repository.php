@@ -72,4 +72,34 @@ function getBook($id = null)
   $book['authors'] = array_column($authors, 'name');
 
   return $book;
+
+  function isIsbnTaken($isbn, $ignoreBookId){
+    global $pdo;
+
+    $bookId = intval($ignoreBookId);
+    
+    $query = "select count(id) from books where isbn = :isbn && id != :book_id";
+
+    $stmt = $pdo->prepare($query);
+    $stmt->execute(['isbn' => $isbn, 'book_id' => $bookId]);
+
+    $isIsbnTaken = $stmt->fetchColumn() > 0;
+
+    return $isIsbnTaken;
+  }
+
+  function isCategoryExist($categoryId){
+    global $pdo;
+
+    $query = "select count(id) from categories where id = :id";
+
+    $stmt = $pdo->prepare($query);
+    $stmt->execute(['category_id' => $categoryId]);
+
+    $isCategoryExist = $stmt->fetchColumn() > 0;
+
+    return $isCategoryExist;
+  }
+
+
 }

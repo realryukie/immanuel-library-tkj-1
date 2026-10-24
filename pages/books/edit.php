@@ -41,21 +41,41 @@ $pageSubtitle = "Perbarui data buku, kategori, dan penulis";
             <div class="form-group">
               <label for="title">Judul Buku</label>
               <input type="text" id="title" name="title" value="<?= $book['title'] ?>">
+              <?php if (isset($errors['title'])): ?>
+                <p style = "font-size:12px; margin-top:4px; color:red;">
+                  <?= $errors['title'] ?>
+                </p>
+              <?php endif; ?>
             </div>
             <div class="form-row">
               <div class="form-group">
                 <label for="isbn">ISBN</label>
                 <input type="text" id="isbn" name="isbn" value="<?= $book['isbn'] ?>">
+                <?php if (isset($errors['isbn'])): ?>
+                  <p style = "font-size:12px; margin-top:4px; color:red;">
+                    <?= $errors['isbn'] ?>
+                  </p>
+                <?php endif; ?>
               </div>
               <div class="form-group">
                 <label for="year">Tahun Terbit</label>
                 <input type="number" id="year" name="year" value="<?= $book['year'] ?>">
+                <?php if (isset($errors['year'])): ?>
+                  <p style = "font-size:12px; margin-top:4px; color:red;">
+                    <?= $errors['year'] ?>
+                  </p>
+                <?php endif; ?>
               </div>
             </div>
             <div class="form-row">
               <div class="form-group">
                 <label for="stock">Jumlah Stok</label>
                 <input type="number" id="stock" name="stock" value="<?= $book['stock'] ?>">
+                <?php if (isset($errors['stock'])): ?>
+                  <p style = "font-size:12px; margin-top:4px; color:red;">
+                    <?= $errors['stock'] ?>
+                  </p>
+                <?php endif; ?>
               </div>
               <div class="form-group">
                 <label for="category_id">Kategori</label>
@@ -64,11 +84,21 @@ $pageSubtitle = "Perbarui data buku, kategori, dan penulis";
                     <option value="<?= $category['id'] ?>" <?= (int) $category['id'] === (int) $book['category_id'] ? 'selected' : '' ?>><?= $category['name'] ?></option>
                   <?php endforeach; ?>
                 </select>
+                <?php if (isset($errors['category_id'])): ?>
+                  <p style = "font-size:12px; margin-top:4px; color:red;">
+                    <?= $errors['category_id'] ?>
+                  </p>
+                <?php endif; ?>
               </div>
             </div>
             <div class="form-group">
               <label for="description">Deskripsi</label>
               <textarea id="description" name="description" rows="3"><?= $book['description'] ?></textarea>
+              <?php if (isset($errors['description'])): ?>
+                  <p style = "font-size:12px; margin-top:4px; color:red;">
+                    <?= $errors['description'] ?>
+                  </p>
+                <?php endif; ?>
             </div>
           </div>
 
@@ -84,6 +114,11 @@ $pageSubtitle = "Perbarui data buku, kategori, dan penulis";
                   </label>
                 <?php endforeach; ?>
               </div>
+              <?php if (isset($errors['author_ids'])): ?>
+                  <p style = "font-size:12px; margin-top:4px; color:red;">
+                    <?= $errors['author_ids'] ?>
+                  </p>
+                <?php endif; ?>
             </div>
 
             <div class="form-actions">
