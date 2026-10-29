@@ -13,16 +13,10 @@ $options = [
 ];
 
 try {
-    $pdo = new PDO($dsn, $username, $password);
+    $pdo = new PDO($dsn, $username, $password, $options);
 } catch (PDOException $error){
     die("Koneksi ke database gagal: " . $error -> getMessage());
 }
-
-
-
-
-
-
 
 
 ?>

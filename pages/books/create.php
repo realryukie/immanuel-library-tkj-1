@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . "/../../repositories/category-repository.php";
 require_once __DIR__ . "/../../repositories/author-repository.php";
+require_once __DIR__ . "/../../repositories/book-repository.php";
 
 $id = $_GET['id'];
 $book = getBook($id);
@@ -9,7 +10,7 @@ $categories = getCategories();
 $authors = getAuthors();
 
 $errors = $_SESSION['errors'] ?? [];
-$old = $SESSION['old']?? [];
+$old = $_SESSION['old']?? [];
 unset($_SESSION['errors'], $_SESSION['old']);
 
 $book = array_merge($book, $old);
